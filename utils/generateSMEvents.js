@@ -1,4 +1,10 @@
 /**
+ * Copyright 2017–2018, LaborX PTY
+ * Licensed under the AGPL Version 3 license.
+ * @author Egor Zuev <zyev.egor@gmail.com>
+ */
+
+/**
  * Load all events for smartContracts, output models
  * @module utils/generateSMEvents
  * @requires truffle-contract
@@ -22,12 +28,15 @@ if (fs.existsSync(config.smartContracts.path))
 module.exports = () => {
 
   return _.chain(contracts)
-    .map(value => //fetch all events
-      _.chain(value).get('abi')
-        .filter({type: 'event'})
-        .value()
-    )
-    .flatten()
+    .toPairs()
+    .map(pair => pair[1].events)
+    .transform((result, ev) => _.merge(result, ev))
+    .toPairs()
+    .map(pair => ({
+      address: pair[0],
+      inputs: pair[1].inputs,
+      name: pair[1].name
+    }))
     .groupBy('name')
     .map(ev => ({
       name: ev[0].name,

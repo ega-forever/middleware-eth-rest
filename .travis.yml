@@ -19,7 +19,6 @@ install:
   - sudo rabbitmq-plugins enable rabbitmq_web_stomp
   - npm install
   - npm install -g pm2
-  - npm run migrate_red mongodb://127.0.0.1:27017 migrations
 
 before_script:
     - cd $TRAVIS_BUILD_DIR/node_modules/middleware_eth.blockProcessor && npm install
@@ -48,10 +47,10 @@ after_success:
   - IMAGE_TAG_NAME="latest"
   - |
     if [ "$TRAVIS_BRANCH" == "master" ]; then
-      travis_wait 30 docker build -t gcr.io/deep-wares-144610/$TRAVIS_BRANCH/middleware-ethereum:$IMAGE_TAG_NAME --build-arg RELEASE=latest .
+      travis_wait 30 docker build -t gcr.io/deep-wares-144610/$TRAVIS_BRANCH/middleware-ethereum:$IMAGE_TAG_NAME --build-arg RELEASE=latest --build-arg GITHUB_API_KEY=$GITHUB_API_KEY .
       docker push gcr.io/deep-wares-144610/$TRAVIS_BRANCH/middleware-ethereum:$IMAGE_TAG_NAME
     elif [ "$TRAVIS_BRANCH" == "develop" ]; then
-      travis_wait 30 docker build -t gcr.io/deep-wares-144610/$TRAVIS_BRANCH/middleware-ethereum:$IMAGE_TAG_NAME --build-arg RELEASE=develop .
+      travis_wait 30 docker build -t gcr.io/deep-wares-144610/$TRAVIS_BRANCH/middleware-ethereum:$IMAGE_TAG_NAME --build-arg RELEASE=develop --build-arg GITHUB_API_KEY=$GITHUB_API_KEY .
       docker push gcr.io/deep-wares-144610/$TRAVIS_BRANCH/middleware-ethereum:$IMAGE_TAG_NAME
     fi;
 

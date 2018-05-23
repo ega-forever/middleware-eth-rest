@@ -1,4 +1,10 @@
 /**
+ * Copyright 2017–2018, LaborX PTY
+ * Licensed under the AGPL Version 3 license.
+ * @author Egor Zuev <zyev.egor@gmail.com>
+ */
+
+/**
  * Chronobank/eth-rest configuration
  * @module config
  * @returns {Object} Configuration
@@ -79,6 +85,8 @@ const initWeb3Provider = (web3) => {
 };
 
 module.exports = (() => {
+  //for easy tests
+  config.rabbit = config.nodered.functionGlobalContext.settings.rabbit;
 
   config.nodered.functionGlobalContext.web3 = new Web3();
   initWeb3Provider(config.nodered.functionGlobalContext.web3);
